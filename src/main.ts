@@ -2,10 +2,12 @@ import { Plugin, MarkdownView } from 'obsidian';
 
 export default class QuickLinkPlugin extends Plugin {
 	async onload() {
-		// This listens for any keyup event in the whole document
+		console.log('AltLink loaded');
+
 		this.registerDomEvent(document, 'keyup', (evt: KeyboardEvent) => {
-			// We only care if the key was "Alt"
-			if (evt.key === 'Alt') {
+			// Check if ONLY the Alt key was pressed and released
+			// and that no other modifiers (like Shift or Ctrl) are active
+			if (evt.key === 'Alt' && !evt.shiftKey && !evt.ctrlKey && !evt.metaKey) {
 				this.makeLink();
 			}
 		});
