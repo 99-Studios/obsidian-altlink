@@ -29,31 +29,40 @@ export default class AltLink extends Plugin {
     if (!activeView) return;
 
     const editor = activeView.editor;
-    const selection = editor.getSelection();
-    if (!selection || selection.trim() === "") return;
+    const rawSelection = editor.getSelection();
+    if (!rawSelection || rawSelection.trim() === "") return;
 
+    // Clean the selection for the filename, but keep rawSelection for the text display
+    const cleanedName = this.cleanFilename(rawSelection);
+    
     let folderPath = this.settings.folderPath.trim();
     
-    // 1. If a folder is specified, make sure it exists
     if (folderPath !== "") {
         const folderExists = await this.app.vault.adapter.exists(folderPath);
         if (!folderExists) {
             await this.app.vault.createFolder(folderPath);
-            new Notice(`Created folder: ${folderPath}`);
         }
         if (!folderPath.endsWith('/')) folderPath += '/';
     }
 
-    const fullPath = `${folderPath}${selection}.md`;
-    const existingFile = this.app.metadataCache.getFirstLinkpathDest(selection, "");
+    const fullPath = `${folderPath}${cleanedName}.md`;
+    const existingFile = this.app.metadataCache.getFirstLinkpathDest(cleanedName, "");
 
     if (existingFile) {
-        editor.replaceSelection(`[[${selection}]]`);
+        // If it exists, we link it. We use an alias [[CleanName|Original Text]] 
+        // so the user's document still looks the way they highlighted it.
+        editor.replaceSelection(`[[${cleanedName}|${rawSelection}]]`);
         new Notice(`Linked to existing note.`);
     } else {
-        await this.app.vault.create(fullPath, `# ${selection}`);
-        editor.replaceSelection(`[[${selection}]]`);
-        new Notice(`Created in ${folderPath || 'root'}`);
+        try {
+            await this.app.vault.create(fullPath, `# ${cleanedName}`);
+            // Create link with alias
+            editor.replaceSelection(`[[${cleanedName}|${rawSelection}]]`);
+            new Notice(`Created: ${cleanedName}`);
+        } catch (error) {
+            new Notice("Error creating file. Check console.");
+            console.error(error);
+        }
     }
 }
 
@@ -63,6 +72,11 @@ export default class AltLink extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
+	}
+
+	
+	cleanFilename(name: string): string {
+    	return name.replace(/[\\/:*?"<>|]/g, '').trim();
 	}
 }
 
