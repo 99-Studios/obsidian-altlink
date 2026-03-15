@@ -3,7 +3,7 @@
 	"name": "AltLink",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Rapidly create or link notes by highlighting text and tapping the Alt key.",
+	"description": "Rapidly link notes by highlighting text and pressing the Alt key.",
 	"author": "99 Studios",
 	"authorUrl": "",
 	"isDesktopOnly": false

@@ -1,7 +1,7 @@
 {
 	"name": "obsidian-altlink",
 	"version": "1.0.0",
-	"description": "Rapidly create or link notes by highlighting text and tapping the Alt key.",
+	"description": "Rapidly link notes by highlighting text and pressing the Alt key.",
 	"main": "main.js",
 	"type": "module",
 	"scripts": {
