@@ -73,7 +73,9 @@ class AltLinkSettingTab extends PluginSettingTab {
 		const {containerEl} = this;
 		containerEl.empty();
 
-		new Setting(containerEl) .setName('AltLink settings') .setHeading();
+		new Setting(containerEl)
+  			.setName('Configure trigger key')
+  			.setHeading();
 
 		new Setting(containerEl)
 			.setName('Trigger key')
