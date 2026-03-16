@@ -28,7 +28,7 @@ export default class AltLink extends Plugin {
 		});
 	}
 
-	async makeLink() {
+	makeLink() {
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 		if (!activeView) return;
 
