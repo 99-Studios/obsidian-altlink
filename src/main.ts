@@ -22,7 +22,7 @@ export default class AltLink extends Plugin {
 			if (isTrigger) {
 				const isModifier = ['Alt', 'Control', 'Shift', 'Meta'].includes(evt.key);
 				if (isModifier || (!evt.shiftKey && !evt.ctrlKey && !evt.metaKey)) {
-					this.makeLink();
+					void this.makeLink();
 				}
 			}
 		});
@@ -53,7 +53,7 @@ export default class AltLink extends Plugin {
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		const loaded = await this.loadData() as Partial<AltLinkSettings>; this.settings = Object.assign({}, DEFAULT_SETTINGS, loaded);
 	}
 
 	async saveSettings() {
@@ -73,10 +73,10 @@ class AltLinkSettingTab extends PluginSettingTab {
 		const {containerEl} = this;
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'AltLink Settings'});
+		new Setting(containerEl) .setName('AltLink settings') .setHeading();
 
 		new Setting(containerEl)
-			.setName('Trigger Key')
+			.setName('Trigger key')
 			.setDesc('Which key should trigger the link? (Common: Alt, F2, `)')
 			.addText(text => text
 				.setPlaceholder('Alt')
